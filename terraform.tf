@@ -4,7 +4,10 @@ secret_key = "DSm5JiXfh943blV0UnPCoQxpxYNwmN0ogS3yFWe3"
 region = "us-east-1"
 }
 
-resource aws_instance "test-server"{
+resource aws_instance "my-test-server"{
 ami = "ami-007855ac798b5175e"
 instance_type = "t2.micro"
+  tags = {
+    Name = "test-server"
+  }
 }
