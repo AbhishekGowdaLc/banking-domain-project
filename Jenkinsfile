@@ -1,11 +1,11 @@
-node {
+   node {
     def mavenHome
     def mavenCMD
     def docker
     def dockerCMD
     def tagName
     
-    stage('prepare environment'){
+    stage('jenkins env setup'){
         echo 'Initialize the variables'
         mavenHome = tool name: 'myMaven' , type: 'maven'
         mavenCMD = "${mavenHome}/bin/mvn"
@@ -13,25 +13,22 @@ node {
         dockerCMD = "${docker}/bin/docker"
         tagName = "1.0"
     }
-    stage ('code checkout'){
+    stage ('checkout'){
         try{
         echo 'pulling the code from github repo'
-        git 'https://github.com/niladrimondal/star-agile-banking-finance.git'
+        git 'https://github.com/AbhishekGowdaLc/starAgile-bankingFinance'
         }
         catch(Exception e){
             echo 'Exception Occur'
             currentBuild.result = "FAILURE"
             emailext body: '''Hello Staragile Deveops
-
             The Build Number ${BUILD_NUMBER} is Failed. Please look into that.
-
-            Thanks,''', subject: 'The jenkis Job ${JOB_NAME} is Failed ', to: 'niladrimondal.mondal@gmail.com'
+            Thanks,''', subject: 'The jenkis Job ${JOB_NAME} is Failed ', to: 'gowda12381@gmail.com'
         }
     }
     stage('Build the application'){
-        echo 'clean and compile and test package'
-        //sh 'mvn clean package'
-        sh "${mavenCMD} clean package"
+        echo 'clean,compile,test & package'
+            sh "${mavenCMD} clean package"
     }
     stage('publish html reports'){
         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/StrarAgileDevopsPipeline/target/surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report Staragile/var/lib/jenkins/workspace/StrarAgileDevopsPipeline', reportTitles: '', useWrapperFileDirectly: true])
@@ -39,11 +36,7 @@ node {
     stage('Build the DockerImage of the application'){
         try{
         echo 'creating the docker image'
-		// if you get permission denied issue
-        //sudo usermod -a -G docker jenkins
-        //restart Jenkins
-        //or add sudoers file below line
-        //jenkins ALL=(ALL) NOPASSWD:ALL
+		
         sh "${dockerCMD} build -t niladrimondaldcr/finance-me:${tagName} ."
         
         }
@@ -51,23 +44,44 @@ node {
             echo 'Exception Occur'
             currentBuild.result = "FAILURE"
             emailext body: '''Hello Staragile Deveops
-
             The Build Number ${BUILD_NUMBER} is Failed. Please look into that.
-
-            Thanks,''', subject: 'The jenkis Job ${JOB_NAME} is Failed ', to: 'niladrimondal.mondal@gmail.com'
+            Thanks,''', subject: 'The jenkis Job ${JOB_NAME} is Failed ', to: 'gowda12381@gmail.com'
             
         }
     }
     stage('push the docker image to dockerhub'){
         echo 'pushing docker image'
         withCredentials([string(credentialsId: 'docker-password', variable: 'DockerPassword')]) {
-        // some block
-        sh "${dockerCMD} login -u niladrimondaldcr -p ${DockerPassword}"
+        sh "${dockerCMD} login -u abhishekgowda123 -p ${DockerPassword}"
         sh "${dockerCMD} push niladrimondaldcr/finance-me:${tagName}"
         }
     }
-    stage('deploy the application'){
-        
-        ansiblePlaybook become: true, credentialsId: 'ansiblekey', disableHostKeyChecking: true, installation: 'MyAnsible', inventory: '/etc/ansible/hosts', playbook: 'ansible-playbook.yml'
-    }
-}
+     stage('test-server provisioning by using terraform & ansible'){
+        echo 'creating test-server'
+        dir './'
+        sh 'chmod 600 abhishek.pem'
+        sh 'terraform init'
+        sh 'terraform validate'
+        sh 'terraform plan'
+        sh 'terraform apply'
+        }
+
+     stage ('selenium-test'){
+       echo 'ready to excute selenium scripts'
+       dir './'
+       sh 'java -jar bankingApp.jar'
+     }
+       
+ 
+    
+    stage('prod server provisioning by using terraform & ansible'){
+        echo 'prod-server setup'
+        dir './'
+        sh 'chmod 600 abhishek.pem'
+        sh 'terrform init'
+        sh 'terraform validate'
+        sh 'terraform plan'
+        sh 'terraform apply'
+      }
+               
+  }
