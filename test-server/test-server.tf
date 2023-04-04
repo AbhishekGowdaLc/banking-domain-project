@@ -12,8 +12,7 @@ resource "aws_instance" "test-server"{
  availability_zone = "us-east-1a"
    connection {
         type = "ssh"
-	user = "ec2-user" 
-	agent = false
+	user = "ubuntu" 
 	private_key = file("./abhishek.pem")
 	host = self.public_ip
 	}
