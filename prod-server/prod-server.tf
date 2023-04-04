@@ -1,9 +1,3 @@
-provider "aws"{
-access_key = "AKIA2F2VO2Y4JRGIRUX4"
-secret_key = "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"
-region = "us-east-1"
-}
-
 resource "aws_eip_association" "eip_assoc"{
   instance_id = aws_instance.test-server.id
   allocation_id = "eipalloc-0d2089363c0bfe59b"
