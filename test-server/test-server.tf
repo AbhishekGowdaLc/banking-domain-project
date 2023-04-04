@@ -13,7 +13,7 @@ resource "aws_eip_association" "eip_assoc"{
 resource "aws_instance" "test-server"{
  ami = "ami-007855ac798b5175e"
  instance_type = "t2.micro"
- key_name = abhishek
+ key_name = "abhishek"
  vpc_security_grp_ids = ["sg-0d42aaa78deb47d92"]
  availability_zone = "us-east-1a"
    connections {
