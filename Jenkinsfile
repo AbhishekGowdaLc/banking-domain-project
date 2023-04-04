@@ -56,27 +56,11 @@
         sh "${dockerCMD} push abhishekgowda123/finance-me:1.0"
         }
     }
-     stage('test-server provisioning by using terraform & ansible'){
-        echo 'creating test-server'
-	 dir ('test-server'){
-	 sh 'chmod 600 abhishek.pem'
-         sh 'terraform init'
-         sh 'terraform validate'
-         sh 'terraform plan'
-         sh 'terraform apply --auto-approve'
-         
-        }
-     }
 	   
+    stage('test-server provisioning by using terraform & ansible'){
+    echo 'creating test-server'
+    }
+     stage('prod-server provisioning by using terraform & ansible'){
+    echo 'creat test-server'
    
-    stage('prod server provisioning by using terraform & ansible'){
-        echo 'prod-server setup'
-	dir ('prod-server'){
-        sh 'chmod 600 abhishek.pem'
-        sh 'terrform init'
-        sh 'terraform validate'
-        sh 'terraform plan'
-        sh 'terraform apply --auto-approve'
-      }
-    } 
-}
+    }
