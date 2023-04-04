@@ -68,16 +68,7 @@
         }
      }
 	   
-     stage('waitng to start the app') {
-             sh ' sleep 40'
-     }
-     stage ('selenium-test'){
-       echo 'ready to excute selenium scripts'
-       sh 'java -jar selenium-banking.jar'
-     }
-       
- 
-    
+   
     stage('prod server provisioning by using terraform & ansible'){
         echo 'prod-server setup'
 	dir ('prod-server'){
