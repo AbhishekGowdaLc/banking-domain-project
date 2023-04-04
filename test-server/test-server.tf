@@ -24,9 +24,9 @@ tags = {
   Name = "test-server"
 }
 
-provisioner "local-exec"{
- command = "echo $(aws_instance.test-server.public_ip) > inventory"
-}
+/*provisioner "local-exec"{
+command = "echo $(aws_instance.test-server.public_ip) > inventory"
+}*/
 
 
 provisioner "local-exec"{
@@ -34,5 +34,5 @@ provisioner "local-exec"{
 }
 }
 output "ip" {
-  value = aws_instance.test-server.public_ip
+  value = aws_eip_association.eip_assoc.public_ip
 }
