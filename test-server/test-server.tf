@@ -7,6 +7,8 @@ region = "us-east-1"
 resource "aws_eip_association" "eip_assoc"{
   instance_id = aws_instance.test-server.id
   allocatio_id = "eipalloc-0d2089363c0bfe59b"
+}	
+	
 
 resource "aws_instance" "test-server"{
  ami = "ami-007855ac798b5175e"
