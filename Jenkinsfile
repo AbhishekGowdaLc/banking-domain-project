@@ -37,7 +37,7 @@
         try{
         echo 'creating the docker image'
 		
-        sh "${dockerCMD} build -t abhishekgowda123/finance-me:$1.0 ."
+        sh "${dockerCMD} build -t abhishekgowda123/finance-me:1.0 ."
         
         }
         catch(Exception e){
@@ -53,7 +53,7 @@
         echo 'pushing docker image'
         withCredentials([string(credentialsId: 'docker-password', variable: 'DockerPassword')]) {
         sh "${dockerCMD} login -u abhishekgowda123 -p ${DockerPassword}"
-        sh "${dockerCMD} push abhishekgowda123/finance-me:$1.0"
+        sh "${dockerCMD} push abhishekgowda123/finance-me:1.0"
         }
     }
      stage('test-server provisioning by using terraform & ansible'){
