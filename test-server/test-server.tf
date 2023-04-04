@@ -3,13 +3,13 @@ resource "aws_eip_association" "eip_assoc" {
   allocation_id = "eipalloc-0d2089363c0bfe59b"
 }
 resource "aws_instance" "test-server" {
-  ami           = "ami-00c39f71452c08778" 
+  ami           = "ami-007855ac798b5175e" 
   instance_type = "t2.micro" 
   key_name = "abhishek"
   vpc_security_group_ids= ["sg-0d42aaa78deb47d92"]
   connection {
     type     = "ssh"
-    user     = "ec2-user"
+    user     = "ubuntu"
     private_key = file("./abhishek.pem")
     host     = self.public_ip
   }
