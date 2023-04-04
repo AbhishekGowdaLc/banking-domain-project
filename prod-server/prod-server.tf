@@ -5,14 +5,14 @@ resource "aws_eip_association" "eip_assoc"{
 	
 
 resource "aws_instance" "prod-server"{
- ami = "ami-00c39f71452c08778"
+ ami = "ami-007855ac798b5175e"
  instance_type = "t2.micro"
  key_name = "abhishek"
  vpc_security_group_ids = ["sg-0d42aaa78deb47d92"]
  availability_zone = "us-east-1a"
    connection {
         type = "ssh"
-	user = "ec2-user" 
+	user = "ubuntu" 
 	private_key = file("./abhishek.pem")
 	host = self.public_ip
 	}
@@ -30,7 +30,7 @@ provisioner "local-exec"{
 
 
 provisioner "local-exec"{
-  command = "ansible-playbook /var/lib/jenkins/workspace/banking-project/test-server/prod-server-playbook.yml"
+  command = "ansible-playbook /var/lib/jenkins/workspace/banking-project/prod-server/prod-server-playbook.yml"
 }
 }
 output "ip" {
