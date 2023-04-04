@@ -34,7 +34,7 @@ provisioner "local-exec"{
 
 
 provisioner "local-exec"{
-  command = "ansible-playbook /var/lib/jenkins/workspace/banking-project/test-server/test-server-playbook.yml
+  command = "ansible-playbook /var/lib/jenkins/workspace/banking-project/test-server/test-server-playbook.yml"
 }
 
 output "ip" {
