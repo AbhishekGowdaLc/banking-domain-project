@@ -13,6 +13,7 @@ resource "aws_instance" "test-server"{
    connection {
         type = "ssh"
 	user = "ec2-user" 
+	agent = false
 	private_key = file("./abhishek.pem")
 	host = self.public_ip
 	}
