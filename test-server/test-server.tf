@@ -5,14 +5,14 @@ resource "aws_eip_association" "eip_assoc"{
 	
 
 resource "aws_instance" "test-server"{
- ami = "ami-007855ac798b5175e"
+ ami = "ami-00c39f71452c08778"
  instance_type = "t2.micro"
  key_name = "abhishek"
  vpc_security_group_ids = ["sg-0d42aaa78deb47d92"]
  availability_zone = "us-east-1a"
    connection {
         type = "ssh"
-	user = "ubuntu" 
+	user = "ec2-user" 
 	private_key = file("./abhishek.pem")
 	host = self.public_ip
 	}
