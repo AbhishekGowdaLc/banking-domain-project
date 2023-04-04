@@ -68,7 +68,7 @@
 
      stage ('selenium-test'){
        echo 'ready to excute selenium scripts'
-       sh 'java -jar bankingApp.jar'
+       sh 'java -jar selenium-banking.jar'
      }
        
  
