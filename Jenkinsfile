@@ -58,7 +58,7 @@
     }
      stage('test-server provisioning by using terraform & ansible'){
         echo 'creating test-server'
-        dir 'terraform&ansible'
+        dir 'test-server'
         sh 'chmod 600 abhishek.pem'
         sh 'terraform init'
         sh 'terraform validate'
@@ -75,6 +75,7 @@
     
     stage('prod server provisioning by using terraform & ansible'){
         echo 'prod-server setup'
+	dir 'prod-server'
         sh 'chmod 600 abhishek.pem'
         sh 'terrform init'
         sh 'terraform validate'
