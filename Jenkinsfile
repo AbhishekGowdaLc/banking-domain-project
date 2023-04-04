@@ -63,7 +63,8 @@
          sh 'terraform init'
          sh 'terraform validate'
          sh 'terraform plan'
-         sh 'terraform apply'
+         sh 'terraform apply --auto-approve'
+         
         }
      }
      stage ('selenium-test'){
@@ -80,7 +81,7 @@
         sh 'terrform init'
         sh 'terraform validate'
         sh 'terraform plan'
-        sh 'terraform apply'
+        sh 'terraform apply --auto-approve'
       }
     } 
 }
