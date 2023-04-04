@@ -57,11 +57,26 @@
         }
     }
 	   
-    stage('test-server provisioning by using terraform & ansible'){
-    echo 'creating test-server'
-    }
-     stage('prod-server provisioning by using terraform & ansible'){
-    echo 'creat test-server'
-   
-    }
+   stage (' configuring Test-server with terraform & ansible and deploying'){
+           
+
+                dir('test-server'){
+                sh 'sudo chmod 600 DEMOKEY.pem'
+                sh 'terraform init'
+                sh 'terraform validate'
+                sh 'terraform apply --auto-approve'
+		}
+               
+            }
+  stage (' configuring prod-server with terraform & ansible and deploying'){
+            steps{
+
+                dir('prod-server'){
+                sh 'sudo chmod 600 DEMOKEY.pem'
+                sh 'terraform init'
+                sh 'terraform validate'
+                sh 'terraform apply --auto-approve'
+                }
+               
+            }
    }
