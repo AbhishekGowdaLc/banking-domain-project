@@ -58,7 +58,7 @@
     }
      stage('test-server provisioning by using terraform & ansible'){
         echo 'creating test-server'
-        dir './'
+        dir 'terraform&ansible'
         sh 'chmod 600 abhishek.pem'
         sh 'terraform init'
         sh 'terraform validate'
@@ -68,7 +68,6 @@
 
      stage ('selenium-test'){
        echo 'ready to excute selenium scripts'
-       dir './'
        sh 'java -jar bankingApp.jar'
      }
        
@@ -76,7 +75,6 @@
     
     stage('prod server provisioning by using terraform & ansible'){
         echo 'prod-server setup'
-        dir './'
         sh 'chmod 600 abhishek.pem'
         sh 'terrform init'
         sh 'terraform validate'
