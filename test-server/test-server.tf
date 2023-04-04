@@ -14,10 +14,10 @@ resource "aws_instance" "test-server"{
  ami = "ami-007855ac798b5175e"
  instance_type = "t2.micro"
  key_name = "abhishek"
- vpc_security_grp_ids = ["sg-0d42aaa78deb47d92"]
+ vpc_security_group_ids = ["sg-0d42aaa78deb47d92"]
  availability_zone = "us-east-1a"
-   connections {
-    type = "ssh"
+   connection {
+        type = "ssh"
 	user = "ec2-user" 
 	key = file("./abhishek.pem")
 	host = self.public_ip
@@ -38,8 +38,7 @@ provisioner "local-exec"{
 provisioner "local-exec"{
   command = "ansible-playbook /var/lib/jenkins/workspace/banking-project/test-server/test-server-playbook.yml"
 }
-
+}
 output "ip" {
   value = aws_instance.test-server.public_ip
-}
 }
