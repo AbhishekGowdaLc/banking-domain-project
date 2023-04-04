@@ -67,6 +67,10 @@
          
         }
      }
+	   
+     stage('waitng to start the app') {
+             sh ' sleep 40'
+     }
      stage ('selenium-test'){
        echo 'ready to excute selenium scripts'
        sh 'java -jar selenium-banking.jar'
