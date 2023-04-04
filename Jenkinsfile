@@ -33,11 +33,11 @@
     stage('publish html reports'){
         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/StrarAgileDevopsPipeline/target/surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report Staragile/var/lib/jenkins/workspace/StrarAgileDevopsPipeline', reportTitles: '', useWrapperFileDirectly: true])
     }
-    stage('Build the DockerImage of the application'){
+    stage('create DockerImage'){
         try{
         echo 'creating the docker image'
 		
-        sh "${dockerCMD} build -t niladrimondaldcr/finance-me:${tagName} ."
+        sh "${dockerCMD} build -t abhishekgowda123/finance-me:$1.0 ."
         
         }
         catch(Exception e){
@@ -53,7 +53,7 @@
         echo 'pushing docker image'
         withCredentials([string(credentialsId: 'docker-password', variable: 'DockerPassword')]) {
         sh "${dockerCMD} login -u abhishekgowda123 -p ${DockerPassword}"
-        sh "${dockerCMD} push niladrimondaldcr/finance-me:${tagName}"
+        sh "${dockerCMD} push abhishekgowda123/finance-me:$1.0"
         }
     }
      stage('test-server provisioning by using terraform & ansible'){
