@@ -1,6 +1,6 @@
 resource "aws_eip_association" "eip_assoc" {
   instance_id   = aws_instance.deployment-server.id
-  allocation_id = "eipalloc-0d2089363c0bfe59b"
+  allocation_id = "eipalloc-0ce4273e0a6628a14"
 }
 resource "aws_instance" "deployment-server" {
   ami           = "ami-007855ac798b5175e" 
