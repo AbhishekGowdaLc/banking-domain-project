@@ -1,12 +1,12 @@
 resource "aws_eip_association" "eip_assoc" {
-  instance_id   = aws_instance.test-server.id
+  instance_id   = aws_instance.deployment-server.id
   allocation_id = "eipalloc-0d2089363c0bfe59b"
 }
-resource "aws_instance" "test-server" {
+resource "aws_instance" "deployment-server" {
   ami           = "ami-007855ac798b5175e" 
-  instance_type = "t2.micro" 
+  instance_type = "t2.medium" 
   key_name = "abhishek"
-  vpc_security_group_ids= ["sg-0d42aaa78deb47d92"]
+  vpc_security_group_ids= ["sg-052c64c5480d3301b"]
   connection {
     type     = "ssh"
     user     = "ubuntu"
@@ -17,19 +17,19 @@ resource "aws_instance" "test-server" {
     inline = [ "echo 'wait to start instance' "]
   }
   tags = {
-    Name = "test-server"
+    Name = "deployment-server"
   }
  provisioner "local-exec" {
 
-        command = " echo ${aws_instance.test-server.public_ip} > inventory "
+        command = " echo ${aws_instance.deployment-server.public_ip} > hostaddress "
  }
  
  provisioner "local-exec" {
- command = "ansible-playbook /var/lib/jenkins/workspace/project-02-banking/test-server/test-server-playbook.yml "
+ command = "ansible-playbook /var/lib/jenkins/workspace/bankingproject/deployment-server/deploymentServer-playbook.yml"
   } 
 }
 
-output "test-server_public_ip" {
+output "deployment-server_public_ip" {
 
   value = aws_eip_association.eip_assoc.public_ip
   
