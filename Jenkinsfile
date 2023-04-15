@@ -1,82 +1,76 @@
-   node {
-    def mavenHome
-    def mavenCMD
-    def docker
-    def dockerCMD
-    def tagName
-    
-    stage('jenkins env setup'){
-        echo 'Initialize the variables'
-        mavenHome = tool name: 'myMaven' , type: 'maven'
-        mavenCMD = "${mavenHome}/bin/mvn"
-        docker = tool name: 'myDocker' , type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
-        dockerCMD = "${docker}/bin/docker"
-        tagName = "1.0"
-    }
-    stage ('checkout'){
-        try{
-        echo 'pulling the code from github repo'
-        git 'https://github.com/AbhishekGowdaLc/starAgile-bankingFinance'
-        }
-        catch(Exception e){
-            echo 'Exception Occur'
-            currentBuild.result = "FAILURE"
-            emailext body: '''Hello Staragile Deveops
-            The Build Number ${BUILD_NUMBER} is Failed. Please look into that.
-            Thanks,''', subject: 'The jenkis Job ${JOB_NAME} is Failed ', to: 'gowda12381@gmail.com'
-        }
-    }
-    stage('Build the application'){
-        echo 'clean,compile,test & package'
-            sh "${mavenCMD} clean package"
-    }
-    stage('publish html reports'){
-        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/StrarAgileDevopsPipeline/target/surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report Staragile/var/lib/jenkins/workspace/StrarAgileDevopsPipeline', reportTitles: '', useWrapperFileDirectly: true])
-    }
-    stage('create DockerImage'){
-        try{
-        echo 'creating the docker image'
-		
-        sh "${dockerCMD} build -t abhishekgowda123/banking-project:1.0 ."
-        
-        }
-        catch(Exception e){
-            echo 'Exception Occur'
-            currentBuild.result = "FAILURE"
-            emailext body: '''Hello Staragile Deveops
-            The Build Number ${BUILD_NUMBER} is Failed. Please look into that.
-            Thanks,''', subject: 'The jenkis Job ${JOB_NAME} is Failed ', to: 'gowda12381@gmail.com'
-            
-        }
-    }
-    stage('push the docker image to dockerhub'){
-        echo 'pushing docker image'
-        withCredentials([string(credentialsId: 'docker-password', variable: 'DockerPassword')]) {
-        sh "${dockerCMD} login -u abhishekgowda123 -p ${DockerPassword}"
-        sh "${dockerCMD} push abhishekgowda123/banking-project:1.0"
-        }
-    }
-	   
-   stage (' configuring Test-server with terraform & ansible and deploying'){
-           
+   pipeline {
+    agent any
 
-                dir('test-server'){
-                sh 'sudo chmod 600 DEMOKEY.pem'
-                sh 'terraform init'
-                sh 'terraform validate'
-                sh 'terraform apply --auto-approve'
-		}
-               
+    tools {
+        maven "maven"
+    }
+
+    stages {
+        stage('checkout') {
+            steps {
+              
+                   git 'https://github.com/AbhishekGowdaLc/banking-domain-project'
+            
+                }
             }
-  stage (' configuring prod-server with terraform & ansible and deploying'){
+        stage('build') {
+              steps {
+              
+                     sh "mvn clean package"
+                }
+        }
+        
+        stage('publish HTML reports') {
+              steps {
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/banking-domain-project/target/surefire-reports', reportFiles: 'index.html', reportName: 'banking-project-HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                }
+        }
+        
+          stage('build docker image') {
+              steps {
+                  
+                  sh'sudo docker system prune -af '
+                  sh 'sudo docker build -t abhishekgowda123/bankingproject:1.0 .'
+              
+                }
+            }
+                
+        stage('push image to dockerhub') {
+              steps {
+                   withCredentials([string(credentialsId: 'docpass', variable: 'docpasswd')]) {
+                  sh 'sudo docker login -u abhishekgowda123 -p ${docpasswd} '
+                  sh 'sudo docker push abhishekgowda123/bankingproject:1.0 .'
+                  }
+                }
+        }    
+                
+        stage ('deployment server & image deployment'){
             steps{
 
-                dir('prod-server'){
-                sh 'sudo chmod 600 DEMOKEY.pem'
+                dir('deploymentServer'){
+                sh 'sudo chmod 600 abhishek.pem'
                 sh 'terraform init'
                 sh 'terraform validate'
                 sh 'terraform apply --auto-approve'
                 }
                
             }
-   }
+        }
+
+        stage('waiting time') {
+              steps {
+                  
+                  sh ' sleep 50'
+                           
+                }
+            }
+       
+        stage('selenium-automation-test') {
+              steps {
+                  
+                  sh 'sudo java -jar bankingproject.jar'
+                  sh"echo 'excuetion is successfull' "
+                           
+                }
+            }
+          }
