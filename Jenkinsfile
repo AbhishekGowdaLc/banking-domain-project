@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven "MY_MAVEN"
+        maven "MAVEN_HOME"
     }
 
     stages {
@@ -10,6 +10,7 @@ pipeline {
          steps{
           echo 'Initialize the variables'
           docker = tool name: 'MY_DOCKER' , type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
+          dockerCMD = "${docker}/bin/docker"
           tagName = "1.0"
          }
       }
