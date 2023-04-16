@@ -1,16 +1,16 @@
-- name : Configure Docker on test-server Instances
+- name : Configuring docker in deploymentServer machine
   hosts : all
   become: true
   connection : ssh
   tasks : 
-  - name: updating apt
+  - name: update apt
     command : sudo apt update
 
   - name : Install Docker
-    command : sudo apt install  docker -y
+    command : sudo snap install docker -y
 
   - name : Start Docker Service
     command : sudo systemctl start docker
 
-  - name : run the Bank application
-    command: docker run -itd -p 8084:8081 abhishekgowda123/banking-project:1.0
+  - name : run the  application
+    command: docker run -itd -p 8084:8081 abhishekgowda123/bankingproject:1.0
