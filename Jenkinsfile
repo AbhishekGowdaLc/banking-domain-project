@@ -1,11 +1,19 @@
- pipeline {
+pipeline {
     agent any
 
     tools {
-        maven "MAVEN_HOME"
+        maven "MY_MAVEN"
     }
 
     stages {
+      stage('prepare environment'){
+         steps{
+          echo 'Initialize the variables'
+          docker = tool name: 'MY_DOCKER' , type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
+          dockerCMD = "${docker}/bin/docker"
+          tagName = "1.0"
+         }
+      }
         stage('checkout') {
             steps {
               
@@ -29,17 +37,18 @@
           stage('build docker image') {
               steps {
                   
-                  sh'sudo docker system prune -a'
-                  sh 'sudo docker build -t abhishekgowda123/bankingproject:1.0 .'
+                  sh'sudo docker system prune -af '
+                sh "${dockerCMD} build -t abhishekgowda123/bankingproject:${tagName} ."
               
                 }
             }
                 
         stage('push image to dockerhub') {
               steps {
-                   withCredentials([string(credentialsId: 'docpass', variable: 'docpasswd')]) {
-                  sh 'sudo docker login -u abhishekgowda123 -p ${docpasswd} '
-                  sh 'sudo docker push abhishekgowda123/bankingproject:1.0 .'
+                 echo 'pushing docker image'
+                 withCredentials([string(credentialsId: 'docker-password', variable: 'DockerPassword')]) {
+                 sh "${dockerCMD} login -u abhishekgowda123 -p ${DockerPassword}"
+                 sh "${dockerCMD} push abhishekgowda123/bankingproject:${tagName}"
                   }
                 }
          }
