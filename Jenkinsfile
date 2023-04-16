@@ -2,7 +2,7 @@
     agent any
 
     tools {
-        maven "MY_MAVEN"
+        maven "MAVEN_HOME"
     }
 
     stages {
