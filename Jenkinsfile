@@ -46,4 +46,12 @@ node {
         sh "${dockerCMD} push abhishekgowda123/bankingproject:${tagName}"
         }
     }
+    stage('deployment server'){
+         dir('deploymentServer'){
+                sh 'sudo chmod 600 abhishek.pem'
+                sh 'terraform init'
+                sh 'terraform validate'
+                sh 'terraform apply --auto-approve'
+                }
+    }
 }
