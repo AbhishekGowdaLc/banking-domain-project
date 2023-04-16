@@ -33,13 +33,7 @@ node {
     stage('Build the DockerImage of the application'){
         try{
         echo 'creating the docker image'
-		// if you get permission denied issue
-        //sudo usermod -a -G docker jenkins
-        //restart Jenkins
-        //or add sudoers file below line
-        //jenkins ALL=(ALL) NOPASSWD:ALL
-        sh "${dockerCMD} build -t abhishekgowda123/bankingproject:${tagName} ."
-        
+	sh "${dockerCMD} build -t abhishekgowda123/bankingproject:${tagName} ."
         }
         catch(Exception e){
             echo 'Exception Occur'
@@ -48,7 +42,6 @@ node {
     stage('push the docker image to dockerhub'){
         echo 'pushing docker image'
         withCredentials([string(credentialsId: 'docker-password', variable: 'DockerPassword')]) {
-        // some block
         sh "${dockerCMD} login -u abhishekgowda123 -p ${DockerPassword}"
         sh "${dockerCMD} push abhishekgowda123/bankingproject:${tagName}"
         }
