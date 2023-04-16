@@ -21,6 +21,7 @@ node {
         catch(Exception e){
             echo 'Exception Occur'
         }
+    }
     stage('Build the application'){
         echo 'clean and compile and test package'
         //sh 'mvn clean package'
@@ -53,5 +54,3 @@ node {
         }
     }
 }
-
- 
