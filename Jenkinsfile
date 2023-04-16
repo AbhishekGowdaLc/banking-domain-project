@@ -1,8 +1,8 @@
-  pipeline {
+ pipeline {
     agent any
 
     tools {
-        maven "maven"
+        maven "MY_MAVEN"
     }
 
     stages {
@@ -42,7 +42,7 @@
                   sh 'sudo docker push abhishekgowda123/bankingproject:1.0 .'
                   }
                 }
-        }    
+         }
                 
         stage ('deployment server & image deployment'){
             steps{
@@ -74,3 +74,5 @@
                 }
             }
           }
+        }
+
