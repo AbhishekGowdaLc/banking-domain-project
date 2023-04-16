@@ -29,7 +29,7 @@
           stage('build docker image') {
               steps {
                   
-                  sh'sudo docker system prune -af '
+                  sh'sudo docker system prune -a'
                   sh 'sudo docker build -t abhishekgowda123/bankingproject:1.0 .'
               
                 }
